@@ -10,7 +10,6 @@ from io import BytesIO
 from PIL import Image
 from datetime import datetime, timezone
 from plyer import notification
-from pynput import keyboard
 import inspect
 from pathlib import Path
 from fastapi import FastAPI
@@ -19,7 +18,6 @@ from fastapi.responses import JSONResponse
 import aiofiles
 from openai import OpenAI
 from openai import AsyncOpenAI
-from pynput import mouse
 
 # Initialize OpenAI client
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -114,45 +112,21 @@ async def log_insight(content):
     async with aiofiles.open(LOG_FILE, "a") as log:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         await log.write(f"[{timestamp}]\n{content}\n{'-'*60}\n")
-
-def on_key_press(key):
-    global user_is_active
-    user_is_active = True
     
-def on_move(x,y):
-    print('pointer moved to ({0},{1})'.format(x,y))
-
-def on_click(x,y,button,pressed):
-    print('{0} at {1}'.format(
-        'Pressed' if pressed else 'released',(x,y)))
-    if not pressed:
-        return False
-def on_scroll(x,y,dx,dy):
-    print('scrolled {0} at {1}'.format(
-        'up' if dy>0 else 'down',(x,y)
     ))
-
-def monitor_user_activity():
-    listener = keyboard.Listener(on_press=on_key_press)
-    listener.start()
-def monitor_mouse_activity():
-    listener= mouse.Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll)
-    listener.start()
 
 # --- AGENT IMPLEMENTATIONS ---
 async def vision_agent():
     global prev_frame, analysis_count, user_is_active
 
     print("✅ Vision Agent started. Press Ctrl+C to stop.")
-    monitor_user_activity()
-    monitor_mouse_activity()
 
     while analysis_count < MAX_ANALYSES:
         reset_tokens()
         await capture_screen()
         frame = cv2.imread(IMAGE_SAVE_PATH)
 
-        if has_screen_changed(prev_frame, frame) and user_is_active:
+        if has_screen_changed(prev_frame, frame):
             print(f"🔍 Change detected. Analyzing... ({analysis_count + 1}/{MAX_ANALYSES})")
 
             while token_state["tokens_used"] < max_token:
