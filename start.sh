@@ -7,4 +7,4 @@ Xvfb :99 -screen 0 1024x768x24 &
 export DISPLAY=:99
 
 # Run your FastAPI app with uvicorn
-exec uvicorn main:app --host 0.0.0.0 --port 8000
+exec uvicorn gpt:app --host 0.0.0.0 --port 8000
