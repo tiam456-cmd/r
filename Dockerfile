@@ -8,12 +8,11 @@ RUN apt-get update && apt-get install -y \
     libgtk-3-0 \
     libx11-xcb1 \
     libxrender1 \
-    libxext6 \
-    libsm6 \
-    libxrandr2 \
-    libfontconfig1 \
-    libdbus-glib-1-2 \
-    && rm -rf /var/lib/apt/lists/*
+    libxtst6 \
+    build-essential \
+    python3-dev \
+    libevdev-dev \
+    libudev-dev
 
 # Set working directory
 WORKDIR /app
