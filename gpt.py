@@ -112,8 +112,6 @@ async def log_insight(content):
     async with aiofiles.open(LOG_FILE, "a") as log:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         await log.write(f"[{timestamp}]\n{content}\n{'-'*60}\n")
-    
-    ))
 
 # --- AGENT IMPLEMENTATIONS ---
 async def vision_agent():
