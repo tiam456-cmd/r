@@ -197,12 +197,12 @@ async def recommendation(summary, logs, MODEL= "gpt-3.5" if user_plan== "basic" 
                     {"role": "user","content": f"Based on this summary and logs, recommend what the user can do next.\n\nSummary: {summary}\n\nLogs: {logs}"}],
          temperature= 1,
      )
-       return response.choices[0].message.content
+     return response.choices[0].message.content
 @app.post("/prev_session_recommendation")
 async def prev_session_recommendation(prev_session: bool= True):
     data= await stop_recording()
     rec= await recommendation(data["summary"], data["logs"])
-    return {"AI recommends": recommendation} if prev_session else "no recommendations"
+    return {"AI recommends": rec} if prev_session else "no recommendations"
     
      
 
